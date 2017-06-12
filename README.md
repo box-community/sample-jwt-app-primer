@@ -25,8 +25,6 @@ The Service Account is a full-fledged Box account, however it is not directly ti
 + By default, a JWT application has no access to your existing Enterprise content. Access to content can be selectively granted and managed through collaborations. 
 + Unlike 3-legged OAuth, a JWT app's permissions are not related to an existing Enterprise user. The JWT app will be granted the exact permissions that you select when configuring the app.
 
----
-
 # Creating a Box JWT Application
 
 Refer to the Box documentation on [Authentication with JWT](https://developer.box.com/docs/authentication-with-jwt) for detailed information on working with JWT applications. Note that the Box documentation refers to certain Box Platform features such as 'App Auth' and 'App Users' which also use JWT but are not intended to work with existing Enterprise content.
@@ -72,7 +70,7 @@ C:\OpenSSL-Win64\bin> openssl rsa -in private_key.pem -out private_key_nopass.pe
 5. On the _What would you like to name your app?_ page, select a meaningful name for your application. Note that this will be the name visible to users on any collaboration folders to which this app has access. Click **Create App**.
 6. Click **View Your App**
 7. Configure the applications permissions under _Application Scopes_, _Application Scopes_, and _Advanced Features_. The following diagram represents the most restrictive (safest) permission set. You can select elevated permissions to satisfy the requirements of your application.
-![Configuration1.PNG](attachment:Configuration1.PNG)![Configuration2.PNG](attachment:Configuration2.PNG)
+![Configuration1.PNG](img/Configuration1.PNG)!
 8. Under _Add and Manage Public Keys_ choose **Add a Public Key**. Open your *public_key.pem* file and paste the content of that file into the dialogue box.
 9. Click **Save Changes** to finalize your configuration.
 
@@ -86,20 +84,18 @@ JWT apps differ from 3-legged apps in that they are pre-authorized by your Enter
 
 From your JWT app Configuration screen, scroll to the _OAuth 2.0 Credentials_. Send the _Client ID_ to your Box Enterprise Co-Admin. The Client _ID_ is not a secret and can safely be sent in email or chat.
 
-![Configuration2.PNG](attachment:Configuration2.PNG)
+![Configuration2.PNG](img/Configuration2.PNG)
 
 ### For Co-Admins
 
 1. Browse to your Admin Console, select the **Gear** symbol in the upper-right of the screen, and select **Elite Settings**
-![AdminConsole1.PNG](attachment:AdminConsole1.PNG)
+![AdminConsole1.PNG](img/AdminConsole1.PNG)
 2. Select the **Apps** tab. Under _Custom Applications_ choose **Authorize New App**.
-![AdminConsole2.PNG](attachment:AdminConsole2.PNG)
+![AdminConsole2.PNG](img/AdminConsole2.PNG)
 3. In the _API Key_ field, paste in the _Client ID_ that was sent to you by the Developer. Click **Next**.
 4. Review the requested permissions. Contact the Developer if you wish to inquire as to why a specific permission is required. Click **Authorize** to finalize the approval process.
-![AdminConsole3.PNG](attachment:AdminConsole3.PNG)
+![AdminConsole3.PNG](img/AdminConsole3.PNG)
 5. The JWT app is now authorized for use and will apear under the list of _Custom Applications_.
-
----
 
 # Using your JWT Application
 
@@ -113,3 +109,119 @@ Authenticating with JWT requires several parameters:
 2. The JWT application _Public Key ID_, located in the _Add and Manage Public Keys_ section of the JWT app configuration.
 3. The ID of the Enterprise in which the JWT app was created. You may need to consult with your Enterprise Co-Admin to find this value.
 4. The path to the private key file. This path must be accessible from the machine on which the script is run.
+
+### Python Example
+
+#### Modules
+
+* pip install boxsdk --pre
+* pip install boxsdk[jwt] --pre
+
+#### Code
+
+```
+# load the private key passphrase from the environment
+import os
+privateKeyPassphrase = os.environ['jwtPrivateKeyPassword']
+
+# Create an authentication object using the JWT parameters for the application.
+from boxsdk import JWTAuth, Client
+
+auth = JWTAuth(
+    client_id='8grfp2owbhpa2qrnsw4c5urmlwh5ybdz',
+    client_secret='1FwTmLNWRbuSjWx7M6dTSUBS6k5h3x1y',
+    enterprise_id='322105',  # IU's Dev Enterprise ID; yours may differ.     
+    jwt_key_id='uaigav1k',   # the Public Key ID
+    rsa_private_key_file_sys_path='C:\\OpenSSL-Win64\\bin\\private_key.pem',
+    rsa_private_key_passphrase=str.encode(privateKeyPassphrase)
+)
+
+# Authenticate the JWT instance.
+token = auth.authenticate_instance()
+
+# Create an authenticated client that can interact with the Box Content API
+client = Client(auth)
+
+# Fetch the name and login (email address) of the JWT app Service Account
+service_account = client.user().get()
+print ('Service Account name:  ' + service_account.name)
+print ('Service Account login: ' + service_account.login)
+```
+
+#### Output
+
+```
+Service Account name:  Server token test
+Service Account login: AutomationUser_269418_WruhHJk0rO@boxdevedition.com
+```
+
+### .Net Example
+
+#### NuGet Packages
+
+* Box.V2
+* Box.V2.JWTAuth
+
+#### Code
+
+```csharp
+using System;
+using System.IO;
+using Box.V2.Config;
+using Box.V2.JWTAuth;
+
+namespace ConsoleApp2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // load private key text into memory
+            var privateKey = File.ReadAllText("C:\\OpenSSL-Win64\\bin\\private_key.pem");
+            
+            // fetch private key password from environment variable
+            var privateKeyPassword = 
+                Environment.GetEnvironmentVariable("jwtPrivateKeyPassword");
+
+            // create a Box JWT auth configuration
+            var boxConfig = new BoxConfig(
+                "8grfp2owbhpa2qrnsw4c5urmlwh5ybdz", // JWT app Client ID
+                "1FwTmLNWRbuSjWx7M6dTSUBS6k5h3x1y", // JWT app Client Secret
+                "322105",                           // Your Box Enterprise ID
+                privateKey,
+                privateKeyPassword,
+                "uaigav1k"                          // JWT app Public Key ID
+            );
+
+            // authenticate and create a Box API client for the Service Account
+            var boxJwtAuth = new BoxJWTAuth(boxConfig);
+            var adminToken = boxJwtAuth.AdminToken();
+            var adminClient = boxJwtAuth.AdminClient(adminToken);
+
+            // fetch Service Account metadata
+            var me = adminClient.UsersManager.GetCurrentUserInformationAsync().Result;
+
+            Console.Out.WriteLine("Service Account name:  " + me.Name);
+            Console.Out.WriteLine("Service Account login: " + me.Login);
+            Console.ReadLine();
+        }
+    }
+}
+
+```
+
+#### Output
+```
+Service Account name:  Server token test
+Service Account login: AutomationUser_269418_WruhHJk0rO@boxdevedition.com
+```
+
+## Invite your Service Account to a Collaboration
+
+The Service Account can be invited to a collaboration like any other Box user. Simply copy and paste the login from the previous step into the invitee field and give the Service Account the appropriate level of access to the folder content.
+
+![Collaboration1.PNG](img/Collaboration1.PNG)
+
+The collaboration will be automatically accepted and the Service Account will appear as an external collaborator. Your JWT app can now work with data in that collaboration folder.
+
+![Collaboration2.png](img/Collaboration2.png)
