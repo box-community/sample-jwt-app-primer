@@ -119,7 +119,7 @@ Authenticating with JWT requires several parameters:
 
 #### Code
 
-```
+```python
 # load the private key passphrase from the environment
 import os
 privateKeyPassphrase = os.environ['jwtPrivateKeyPassword']
