@@ -227,3 +227,8 @@ The Service Account can be invited to a collaboration like any other Box user. S
 The collaboration will be automatically accepted and the Service Account will appear as an external collaborator. Your JWT app can now work with data in that collaboration folder.
 
 ![Collaboration2.png](img/Collaboration2.png)
+
+# Unknowns / To-Bes-Determined
+
+1. Can the Service Account create folders/files of its own?
+2. If (1) is true, what happens to that data if/when the JWT app is deleted?
