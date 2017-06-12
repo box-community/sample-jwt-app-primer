@@ -1,6 +1,6 @@
 # Box + JWT Primer
 
-This document describes how to provision server-based applications for a Box enterprise using OAuth2 with JWT authention. It is aimed at developers wishing to build server-based applications or scripts that target personal- or group-owned enterprise content.
+This document describes a method for provisioning Box applications using OAuth2 with JWT. It is aimed at developers wishing to build server-based applications or scripts that target personal- or group-owned enterprise content. 
 
 ## OAuth 2 with JSON Web Tokens (JWT)
 
