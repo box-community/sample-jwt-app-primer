@@ -1,5 +1,7 @@
 # Box + JWT Primer
 
+This document describes how to provision server-based applications for a Box enterprise using OAuth2 with JWT authention. It is aimed at developers wishing to build server-based applications or scripts that target personal- or group-owned enterprise content.
+
 ## OAuth 2 with JSON Web Tokens (JWT)
 
 Traditional "3-legged" OAuth was designed for mobile/browser application development. It enables users to securely share their content (such as Box files) with a 3rd party application and revoke that permission at any time. For many years this was the only authentication method provided by Box.
