@@ -8,7 +8,7 @@ Traditional "3-legged" OAuth was designed for mobile/browser application develop
 
 3-legged OAuth has some design features that make it great for mobile/browser apps but difficult to use with enterprise/administrative scripts and applications. The browser-based authentication model requires human interaction and is difficult to script. It requires the application to maintain and update certain pieces of authorization state over time, the loss of which can disable the application. It does not play nicely in environments with concurrent/HA processes.
 
-OAuth 2.0 with JSON Web Token (JWT) has emerged as an alternative to the traditional "3-legged" OAuth authentication model. It differs from 3-legged OAuth in some key was that make it more suitable for server-based applications:
+OAuth 2.0 with JSON Web Token (JWT) has emerged as an alternative to the traditional "3-legged" OAuth authentication model. It differs from 3-legged OAuth in some key ways that make it more suitable for server-based applications:
 
 + **JWT auth does not require human interaction beyond the initial setup and configuration.** During the configuration process a developer will select the permissions the application will need to do to perform its tasks (e.g. 'Manage Enterprise Users' or 'Manage Groups'). An Enterprise co-admin pre-authorizes the application with those specific permissions. The JWT authorization process is then fully programatic and no browser interaction is required.
 
