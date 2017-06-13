@@ -72,7 +72,7 @@ C:\OpenSSL-Win64\bin> openssl rsa -in private_key.pem -out private_key_nopass.pe
 5. On the _What would you like to name your app?_ page, select a meaningful name for your application. Note that this will be the name visible to users on any collaboration folders to which this app has access. Click **Create App**.
 6. Click **View Your App**
 7. Configure the applications permissions under _Application Scopes_, _Application Scopes_, and _Advanced Features_. The following diagram represents the most restrictive (safest) permission set. You can select elevated permissions to satisfy the requirements of your application.
-![Configuration1.PNG](img/Configuration1.PNG)!
+![Configuration1.PNG](img/Configuration1.PNG)
 8. Under _Add and Manage Public Keys_ choose **Add a Public Key**. Open your *public_key.pem* file and paste the content of that file into the dialogue box.
 9. Click **Save Changes** to finalize your configuration.
 
