@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>csharp_netcore</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Box.V2.Core" Version="3.9.2"/>
+  </ItemGroup>
+</Project>
