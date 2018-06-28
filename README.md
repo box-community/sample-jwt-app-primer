@@ -2,13 +2,27 @@
 
 This document describes a method for provisioning Box applications using OAuth2 with JWT. It is aimed at developers wishing to build server-based applications or scripts that target personal- or group-owned enterprise content. 
 
-## OAuth 2 with JSON Web Tokens (JWT)
+## A (Very) Short Introduction to OAuth2 and the Problem it Solves
 
-Traditional "3-legged" OAuth was designed for mobile/browser application development. It enables users to securely share their content (such as Box files) with a 3rd party application and revoke that permission at any time. For many years this was the only authentication method provided by Box.
+Imagine you are a Box user and you have an application that want to access your Box files. You'd like to grant this access and you have no reason to mistrust the app, but nevertheless you are a good security-minded Box user and some concerns come to mind:
+
+1. Authentication: Will I have to share my Box/SSO credentials with the app?
+2. Authorization: How do I know what the app can do with my files?
+3. Revocation: How am I be assured that I can turn that sharing off in the future?
+
+OAuth2 is an industry-standard authorization framework designed to address these concerns. Specifically:
+
+1. Your credentials are never shared with the app. Instead, Box gives the app a unique, time-limited token with which the app can make Box API calls on your behalf.
+2. The app developer must specify up front what permissions ("scopes") it needs on your files. Prior to authorizing access you can review and confirm the requested permissions. Box enforces those permissions at the API level.
+3. At any time, you can tell both the app and/or Box to stop sharing your data. Future API calls from the app will be rejected as unauthorized.
+
+## The Two Flavors of OAuth2
+
+*"3-legged" OAuth2* was designed for mobile/browser application development. It enables users to securely share their content (such as Box files) with a 3rd party application and revoke that permission at any time. For many years this was the only authentication method provided by Box.
 
 3-legged OAuth has some design features that make it great for mobile/browser apps but difficult to use with enterprise/administrative scripts and applications. The browser-based authentication model requires human interaction and is difficult to script. It requires the application to maintain and update certain pieces of authorization state over time, the loss of which can disable the application. It does not play nicely in environments with concurrent/HA processes.
 
-OAuth 2.0 with JSON Web Token (JWT) has emerged as an alternative to the traditional "3-legged" OAuth authentication model. It differs from 3-legged OAuth in some key ways that make it more suitable for server-based applications:
+*OAuth2 with JSON Web Token (JWT)* was designed for server-to-server interaction (batch jobs, adminstrative tasks, etc.) It differs from 3-legged OAuth in some key ways that make it more suitable for server-based applications:
 
 + **JWT auth does not require human interaction beyond the initial setup and configuration.** During the configuration process a developer will select the permissions the application will need to do to perform its tasks (e.g. 'Manage Enterprise Users' or 'Manage Groups'). An Enterprise co-admin pre-authorizes the application with those specific permissions. The JWT authorization process is then fully programmatic and no browser interaction is required.
 
@@ -31,38 +45,6 @@ The Service Account is a full-fledged Box account, however it is not directly ti
 
 Refer to the Box documentation on [Authentication with JWT](https://developer.box.com/docs/authentication-with-jwt) for detailed information on working with JWT applications. Note that the Box documentation refers to certain Box Platform features such as 'App Auth' and 'App Users' which also use JWT but are not intended to work with existing Enterprise content.
 
-## Generate a Public/Private Keypair
-
-### On Windows
-
-1. Download and install 'Win64 OpenSSL' from https://slproweb.com/products/Win32OpenSSL.html. 
-2. Generate private key:
-```
-C:\OpenSSL-Win64\bin> openssl genrsa -aes256 -out private_key.pem 2048
-```
-3. Generate a public key from the private key:
-```       
-C:\OpenSSL-Win64\bin> openssl rsa -pubout -in private_key.pem -out public_key.pem
-```
-4. (Optional) Strip the passphrase from the private key. If you elect to keep the password you will have to supply it to the script that accesses the cert, either via an environment variable (good!) or plain text (bad!)
-```
-C:\OpenSSL-Win64\bin> openssl rsa -in private_key.pem -out private_key_nopass.pem
-```
-
-### On Mac/Linux
-1. Generate private key:
-```
-> openssl genrsa -aes256 -out private_key.pem 2048
-```
-2. Generate a public key from the private key:
-```       
-> openssl rsa -pubout -in private_key.pem -out public_key.pem
-```
-3. (Optional) Strip the passphrase from the private key. If you elect to keep the password you will have to supply it to the script that accesses the cert, either via an environment variable (good!) or plain text (bad!)
-```
-> openssl rsa -in private_key.pem -out private_key_nopass.pem
-```
-
 ## Configure a New JWT Application
 
 1. Browse to https://developers.box.com/ and Log In.
@@ -71,24 +53,28 @@ C:\OpenSSL-Win64\bin> openssl rsa -in private_key.pem -out private_key_nopass.pe
 4. On the _Authentication Method_ page, chose **OAuth 2.0 with JWT (Server Authentication)**. Click **Next**.
 5. On the _What would you like to name your app?_ page, select a meaningful name for your application. Note that this will be the name visible to users on any collaboration folders to which this app has access. Click **Create App**.
 6. Click **View Your App**
-7. Configure the applications permissions under _Application Scopes_, _Application Scopes_, and _Advanced Features_. The following diagram represents the most restrictive (safest) permission set. You can select elevated permissions to satisfy the requirements of your application.
-![Configuration1.PNG](img/Configuration1.PNG)
-8. Under _Add and Manage Public Keys_ choose **Add a Public Key**. Open your *public_key.pem* file and paste the content of that file into the dialogue box.
+
+7. Configure the applications permissions under _Application Scopes_, _Application Scopes_, and _Advanced Features_. The following diagram represents the most restrictive (safest) permission set. You can select elevated permissions to satisfy the requirements of your application.  
+
+![Configuration1.PNG](img/Configuration1.PNG)  
+
+8. Under _Add and Manage Public Keys_ choose **Generate a Public/Private Keypair**. A JSON file will be downloaded by your browser. *This file contains all the credentials needed to authenticate your JWT application, so keep it stored securely and do not commit it to version control!*  
+
 9. Click **Save Changes** to finalize your configuration.
 
 You can come back and update this configuration at any time, however if you modify the application permissions it must be reauthorized by an enterprise co-admin.
 
-## Pre-Authorize the JWT Application
+## Authorize your JWT Application
 
-JWT apps differ from 3-legged apps in that they are pre-authorized by your Enterprise Co-Admin for use with their requested permissions. The Co-Admin can revoke authorization at any time, and reauthorization is required if the permission set is ever changed.
+JWT apps differ from 3-legged apps in that they are pre-authorized by your Enterprise Co-Admin for use with their requested permissions. The Co-Admin can revoke authorization at any time, and reauthorization is required if the permission set is ever changed. The steps for this authorization are layed out below. Once this is finished, continue to the [First Steps with your JWT Application](#first-steps-with-your-jwt-application).
 
-### For Developers
+#### For Developers
 
 From your JWT app Configuration screen, scroll to the _OAuth 2.0 Credentials_. Send the _Client ID_ to your Box Enterprise Co-Admin. The Client _ID_ is not a secret and can safely be sent in email or chat.
 
 ![Configuration2.PNG](img/Configuration2.PNG)
 
-### For Co-Admins
+#### For Co-Admins
 
 1. Browse to your Admin Console, select the **Gear** symbol in the upper-right of the screen, and select **Elite Settings**
 ![AdminConsole1.PNG](img/AdminConsole1.PNG)
@@ -99,11 +85,28 @@ From your JWT app Configuration screen, scroll to the _OAuth 2.0 Credentials_. S
 ![AdminConsole3.PNG](img/AdminConsole3.PNG)
 5. The JWT app is now authorized for use and will apear under the list of _Custom Applications_.
 
-# Using your JWT Application
+## Accessing Departmental/Group Content with your JWT App
+
+To work with files in user or departmental Box folder, the JWT app service account must be invited to collaborate on that folder. You can limit the app's permissions on your folder by choosing the appropriate [collaboration role](https://community.box.com/t5/Collaborate-By-Inviting-Others/Understanding-Collaborator-Permission-Levels/ta-p/144). Some example code is included in this repository to help you discover the service account login. 
+
+The Service Account can be invited to a collaboration like any other Box user. Simply copy and paste the service account login from the previous step into the invitee field and give the Service Account the appropriate level of access to the folder content.
+
+![Collaboration1.PNG](img/Collaboration1.PNG)
+
+The collaboration will be automatically accepted and the Service Account will appear as an external collaborator. Your JWT app can now work with data in that collaboration folder.
+
+![Collaboration2.png](img/Collaboration2.png)
+
+## JWT App Examples
+
+Browse the project below for code examples to discover the service account login and list out a box folder tree. In each of these examples you will need the JSON config file that was downloaded when configuring your JWT app above.
+
+* [.Net (C#)](examples/csharp-netcore)
+* .Net (F#)
+* Python
+* Javascript
 
 ## Discover the Service Account Login
-
-In order to invite the Service Account to collaborate on Enterprise content you must first determine its login. This requires that you programatically authenticate as the JWT app and fetch the metadata for the authenticated user.
 
 Authenticating with JWT requires several parameters:
 
@@ -156,79 +159,3 @@ print ('Service Account login: ' + service_account.login)
 Service Account name:  Server token test
 Service Account login: AutomationUser_269418_WruhHJk0rO@boxdevedition.com
 ```
-
-### .Net Example
-
-#### NuGet Packages
-
-* Box.V2
-* Box.V2.JWTAuth
-
-#### Code
-
-```csharp
-using System;
-using System.IO;
-using Box.V2.Config;
-using Box.V2.JWTAuth;
-
-namespace ConsoleApp2
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // load private key text into memory
-            var privateKey = File.ReadAllText("C:\\OpenSSL-Win64\\bin\\private_key.pem");
-            
-            // fetch private key password from environment variable
-            var privateKeyPassword = 
-                Environment.GetEnvironmentVariable("jwtPrivateKeyPassword");
-
-            // create a Box JWT auth configuration
-            var boxConfig = new BoxConfig(
-                "8grfp2owbhpa2qrnsw4c5urmlwh5ybdz", // JWT app Client ID
-                "1FwTmLNWRbuSjWx7M6dTSUBS6k5h3x1y", // JWT app Client Secret
-                "322105",                           // Your Box Enterprise ID
-                privateKey,
-                privateKeyPassword,
-                "uaigav1k"                          // JWT app Public Key ID
-            );
-
-            // authenticate and create a Box API client for the Service Account
-            var boxJwtAuth = new BoxJWTAuth(boxConfig);
-            var adminToken = boxJwtAuth.AdminToken();
-            var adminClient = boxJwtAuth.AdminClient(adminToken);
-
-            // fetch Service Account metadata
-            var me = adminClient.UsersManager.GetCurrentUserInformationAsync().Result;
-
-            Console.Out.WriteLine("Service Account name:  " + me.Name);
-            Console.Out.WriteLine("Service Account login: " + me.Login);
-            Console.ReadLine();
-        }
-    }
-}
-
-```
-
-#### Output
-```
-Service Account name:  Server token test
-Service Account login: AutomationUser_269418_WruhHJk0rO@boxdevedition.com
-```
-
-## Invite your Service Account to a Collaboration
-
-The Service Account can be invited to a collaboration like any other Box user. Simply copy and paste the login from the previous step into the invitee field and give the Service Account the appropriate level of access to the folder content.
-
-![Collaboration1.PNG](img/Collaboration1.PNG)
-
-The collaboration will be automatically accepted and the Service Account will appear as an external collaborator. Your JWT app can now work with data in that collaboration folder.
-
-![Collaboration2.png](img/Collaboration2.png)
-
-# Unknowns / To-Bes-Determined
-
-1. Can the Service Account create folders/files of its own?
-2. If (1) is true, what happens to that data if/when the JWT app is deleted?
