@@ -16,15 +16,14 @@ namespace csharp_netcore
             /** Configuration Items **/
 
             // Set the path to your JWT app config JSON file here!
-            var pathToConfigJson = "";
+            var pathToConfigJson = "/Users/jhoerr/Downloads/62618999_02mlnyl7_config.json";
 
             // Set the path to a folder you'd like to traverse here!
-            var folderId = "0";
+            var folderId = "2845876029";
 
 
             /** Main **/
 
-            // Get a Box client authenticated as the JWT app service account.
             BoxClient adminClient = GetAuthenticatedClient(pathToConfigJson);
 
             // Print the name and login of the JWT app service account.
@@ -51,6 +50,8 @@ namespace csharp_netcore
             using (var configStream = File.OpenRead(pathToConfigJson))
                 config = BoxConfig.CreateFromJsonFile(configStream);
 
+            Console.Out.WriteLine("Authenticating...");
+
             // Create a Box client and authenticate as the service account
             var boxJwtAuth = new BoxJWTAuth(config);
             var adminToken = boxJwtAuth.AdminToken();
@@ -65,9 +66,9 @@ namespace csharp_netcore
         {
             var user = client.UsersManager.GetCurrentUserInformationAsync().Result;
             Console.Out.WriteLine("");
-            Console.Out.WriteLine("Authenticated User");
-            Console.Out.WriteLine($"Name: {user.Name}");
-            Console.Out.WriteLine($"Login: {user.Login}");
+            Console.Out.WriteLine("Authenticated as");
+            Console.Out.WriteLine($"  Name: {user.Name}");
+            Console.Out.WriteLine($"  Login: {user.Login}");
         }
 
         /// <summary>

@@ -29,6 +29,7 @@ def get_authenticated_client(configPath):
     if (os.path.isfile(configPath) == False):
         raise ValueError(f"configPath must be a path to the JSON config file for your Box JWT app")
     auth = JWTAuth.from_settings_file(configPath)
+    print("Authenticating...")
     auth.authenticate_instance()
     return Client(auth)
 
