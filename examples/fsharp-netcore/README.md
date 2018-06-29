@@ -4,10 +4,10 @@ This cross-platform .NET Core app will create an authenticated Box client for yo
 
 ## Prerequisites
 
-Download and install the [.NET Core 2.1 SDK](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or newer.  You can confirm that the SDK is properly isntalled and ready with the following command.
+Download and install the [.NET Core 2.1 SDK](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or newer.  You can confirm that the SDK is installed and ready with the following command.
 
-```console
-user@home:~$ dotnet --info
+```
+$ dotnet --info
 .NET Core SDK (reflecting any global.json):
  Version:   2.1.300
 ```
@@ -23,9 +23,9 @@ There are two configuration variables to set in `Program.fs`.
 
 ## Usage
 
-After setting the above configuration variables execute the following:
+After setting the above configuration variables execute the following in a terminal.
 
-```console
-user@home:~$ dotnet build
-user@home:~$ dotnet run
+```
+dotnet build
+dotnet run
 ```

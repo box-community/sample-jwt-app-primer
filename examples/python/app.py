@@ -65,8 +65,8 @@ def get_subitems(client, folder, fields = ["id","name","path_collection","size"]
         lastFetchedCount = len(fetched)
     return items
 
-def list_user_info(client):
-    """List the name and login of the current authenticated Box user
+def print_user_info(client):
+    """Print the name and login of the current authenticated Box user
         
     Arguments:
         client {Client} -- An authenticated Box client
@@ -92,8 +92,8 @@ def walk_folder_tree_rec(client, folder, action):
     for file in filter(lambda i: i.type=="file", subitems):
         action(file)
 
-def list_folder_tree(client, folderId="0"):
-    """List the contents of a Box folder tree
+def print_folder_tree(client, folderId="0"):
+    """Print the contents of a Box folder tree
     
     Arguments:
         client {Client} -- An authenticated Box client
@@ -112,6 +112,6 @@ if __name__ == "__main__":
     # Get a client instance for the service account.
     client = get_authenticated_client(pathToConfigJson)
     # Print the name and login associated with the service account.
-    list_user_info(client)
+    print_user_info(client)
     # Print a file and folder listing
-    list_folder_tree(client, folderId)
+    print_folder_tree(client, folderId)

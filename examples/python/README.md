@@ -2,6 +2,15 @@
 
 This example will create an authenticated Box client for your JWT app service account, print the name and login for that service account, and print out the folder tree for a specified Box folder.
 
+## Prerequisites
+
+Download and install [Python 3.x](https://www.python.org/getit/). You can confirm that Python is installed and ready with the following command.
+
+```
+$ python --version
+Python 3.6.5 :: ....
+```
+
 ## Configuration
 
 There are two configuration variables to set in `app.py`.
@@ -13,7 +22,7 @@ There are two configuration variables to set in `app.py`.
 
 ## Usage
 
-After setting the above configuration variables, run:
+After setting the above configuration variables execute the following in a terminal.
 
 ```
 pip install -r requirements.txt
