@@ -102,60 +102,6 @@ The collaboration will be automatically accepted and the Service Account will ap
 Browse the project below for code examples to discover the service account login and list out a box folder tree. In each of these examples you will need the JSON config file that was downloaded when configuring your JWT app above.
 
 * [.Net (C#)](examples/csharp-netcore)
-* .Net (F#)
-* Python
-* Javascript
-
-## Discover the Service Account Login
-
-Authenticating with JWT requires several parameters:
-
-1. The JWT application _Client ID_ and _Client Secret_, located in the _OAuth 2.0 Credentials_ section of the JWT app configuration.
-2. The JWT application _Public Key ID_, located in the _Add and Manage Public Keys_ section of the JWT app configuration.
-3. The ID of the Enterprise in which the JWT app was created. You may need to consult with your Enterprise Co-Admin to find this value.
-4. The path to the private key file. This path must be accessible from the machine on which the script is run.
-
-### Python Example
-
-#### Modules
-
-* pip install boxsdk --pre
-* pip install boxsdk[jwt] --pre
-
-#### Code
-
-```python
-# load the private key passphrase from the environment
-import os
-privateKeyPassphrase = os.environ['jwtPrivateKeyPassword']
-
-# Create an authentication object using the JWT parameters for the application.
-from boxsdk import JWTAuth, Client
-
-auth = JWTAuth(
-    client_id='8grfp2owbhpa2qrnsw4c5urmlwh5ybdz',
-    client_secret='1FwTmLNWRbuSjWx7M6dTSUBS6k5h3x1y',
-    enterprise_id='322105',  # IU's Dev Enterprise ID; yours may differ.     
-    jwt_key_id='uaigav1k',   # the Public Key ID
-    rsa_private_key_file_sys_path='C:\\OpenSSL-Win64\\bin\\private_key.pem',
-    rsa_private_key_passphrase=str.encode(privateKeyPassphrase)
-)
-
-# Authenticate the JWT instance.
-token = auth.authenticate_instance()
-
-# Create an authenticated client that can interact with the Box Content API
-client = Client(auth)
-
-# Fetch the name and login (email address) of the JWT app Service Account
-service_account = client.user().get()
-print ('Service Account name:  ' + service_account.name)
-print ('Service Account login: ' + service_account.login)
-```
-
-#### Output
-
-```
-Service Account name:  Server token test
-Service Account login: AutomationUser_269418_WruhHJk0rO@boxdevedition.com
-```
+* [.Net (F#)](examples/fsharp-netcore)
+* [Python](examples/python)
+* [Node.js](examples/node)
