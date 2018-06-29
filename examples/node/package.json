@@ -1,0 +1,10 @@
+{
+    "description": "A simple node app to demonstrate JWT app service accounts",
+    "repository": {
+        "url": "https://github.com/box-community/jwt-app-primer"
+    },
+    "license": "Apache 2.0",
+    "dependencies": {
+        "box-node-sdk": "^1.19.0"
+    }
+}
