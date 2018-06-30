@@ -1,4 +1,4 @@
-# F# JWT example
+# Node.js JWT example
 
 This simple node app will create an authenticated Box client for your JWT app service account, print the name and login for that service account, and print out the folder tree for a specified Box folder.
 
