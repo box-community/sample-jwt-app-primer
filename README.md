@@ -4,12 +4,18 @@ This document describes a method for provisioning Box applications using OAuth2 
 
 ## JWT App Examples
 
-These examples will help you discover the service account login associated with your JWT app and list a Box folder tree. For each of these examples you will need a configured JWT app and the JSON config file with your JWT app credentials. Your app will also need to be approved in at least one enterprise (a development enterprise works fine here.) Read on to learn more about what all that means!
-
 * [.Net (C#)](examples/csharp-netcore)
 * [.Net (F#)](examples/fsharp-netcore)
 * [Python](examples/python)
 * [Node.js](examples/node)
+
+Each of these examples does three things:
+
+1. *Authenticate a Box [SDK](https://developer.box.com/docs/sdks) client as the Box JWT service account.*
+2. *Print the JWT service account name and login.* The login is necessary to invite the JWT app as a collaborator on enterprise content.
+3. *Walk a Box folder tree and print its contents.* Box folder traversal is a common activity in Box applications and it can maybe be a bit challenging for folks that haven't worked with recursion in a while. I included the pattern here as a little quick-starter.
+
+For each of these examples you will need a configured JWT app and the JSON config file with your JWT app credentials. Your app will also need to be approved in at least one enterprise (a development enterprise works fine here.) Read on to learn more about what all that means!
 
 ## A (Very) Short Introduction to OAuth2 and the Problem it Solves
 
