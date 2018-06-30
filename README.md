@@ -75,7 +75,7 @@ You can come back and update this configuration at any time, however if you modi
 
 ## Authorize your JWT Application
 
-JWT apps differ from 3-legged apps in that they are pre-authorized by your Enterprise Co-Admin for use with their requested permissions. The Co-Admin can revoke authorization at any time, and reauthorization is required if the permission set is ever changed. The steps for this authorization are layed out below. Once this is finished, continue to the [First Steps with your JWT Application](#first-steps-with-your-jwt-application).
+JWT apps differ from 3-legged apps in that they are pre-authorized by your Enterprise Co-Admin for use with their requested permissions. The Co-Admin can revoke authorization at any time, and reauthorization is required if the permission set is ever changed. The steps for this authorization are layed out below.
 
 #### For Developers
 
@@ -96,7 +96,9 @@ From your JWT app Configuration screen, scroll to the _OAuth 2.0 Credentials_. S
 
 ## Accessing Departmental/Group Content with your JWT App
 
-To work with files in user or departmental Box folder, the JWT app service account must be invited to collaborate on that folder. You can limit the app's permissions on your folder by choosing the appropriate [collaboration role](https://community.box.com/t5/Collaborate-By-Inviting-Others/Understanding-Collaborator-Permission-Levels/ta-p/144). Some example code is included in this repository to help you discover the service account login. 
+At this point your JWT app has been authorized. With the JSON config file you can run any of the [JWT App examples](#jwt-app-examples) in this repository.
+
+By default the JWT app cannot access any data in your enterprise. To work with files in user or departmental Box folder, the JWT app service account must be invited to collaborate on that folder. You can limit the app's permissions on your folder by choosing the appropriate [collaboration role](https://community.box.com/t5/Collaborate-By-Inviting-Others/Understanding-Collaborator-Permission-Levels/ta-p/144). When you run one of the app examples above, it will print out the service account login.
 
 The Service Account can be invited to a collaboration like any other Box user. Simply copy and paste the service account login from the previous step into the invitee field and give the Service Account the appropriate level of access to the folder content.
 
@@ -105,3 +107,26 @@ The Service Account can be invited to a collaboration like any other Box user. S
 The collaboration will be automatically accepted and the Service Account will appear as an external collaborator. Your JWT app can now work with data in that collaboration folder.
 
 ![Collaboration2.png](img/Collaboration2.png)
+
+
+# Frequently Asked Questions
+
+**I heard that JWT apps should only be used for true enterprise things like user administration.**
+
+JWT is generally appropriate for any non-person/server workflow. What makes a JWT app an 'enterprise' app is the selection of management scopes (i.e. Manage Users, Manage Groups) that give it certain elevated privileges once its authorized in your enterprise. If the scopes are minimally selected as outlined above, then in fact a JWT app has *fewer* permissions in your enterprise than a default 3-legged OAuth app.
+
+**When I go to authorize the JWT app it says that I see something that says "0 of 25 App Users licenses used". Does that mean I can only have 25 JWT apps in my enterprise?**
+
+No. The App User model is part of the "white label" Box offering (confusingly) named "Box Platform." If you limit your JWT app activity to enterprise management and/or collaboration on enterprise data, you will never create "App Users", and as a result will never hit that App User limit.
+
+**We have been successfully using 3-legged OAuth2 for server apps for a long time. Our token management process works fine for us.**
+
+So have I! For a long time it was the only option. If you like it, keep doing it. However, JWT will probably be easier for new enterprise and departmental developers to work with, especially if they're coming from other platforms (Google, etc) where JWT is the norm for server-based applications.
+
+**I don't see an example app in Java/Go/Rust/Haskell/PHP/Erlang/Ruby/Elixir/VB/Perl...**
+
+Let's work together to create one, or feel free to code one up yourself and we can add it here. I only ask that you stick to the general format of the existing example apps.
+
+**I have other questions that were missed here.**
+
+[Get in touch](mailto:jhoerr@gmail.com) and let's figure it out together!
