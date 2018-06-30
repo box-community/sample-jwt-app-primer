@@ -2,21 +2,30 @@
 
 This document describes a method for provisioning Box applications using OAuth2 with JWT. It is aimed at developers wishing to build server-based applications or scripts that target personal- or group-owned enterprise content. 
 
+## JWT App Examples
+
+These examples will help you discover the service account login associated with your JWT app and list a Box folder tree. For each of these examples you will need a configured JWT app and the JSON config file with your JWT app credentials. Your app will also need to be approved in at least one enterprise (a development enterprise works fine here.) Read on to learn more about what all that means!
+
+* [.Net (C#)](examples/csharp-netcore)
+* [.Net (F#)](examples/fsharp-netcore)
+* [Python](examples/python)
+* [Node.js](examples/node)
+
 ## A (Very) Short Introduction to OAuth2 and the Problem it Solves
 
-Imagine you are a Box user and you have an application that want to access your Box files. You'd like to grant this access and you have no reason to mistrust the app, but nevertheless you are a good security-minded Box user and some concerns come to mind:
+Imagine you are a Box user and you have an application that wants to access your Box files. You'd like to grant this access and you have no reason to mistrust the app, but nevertheless you are a good security-minded Box user and you have some concerns:
 
 1. Authentication: Will I have to share my Box/SSO credentials with the app?
 2. Authorization: How do I know what the app can do with my files?
 3. Revocation: How am I be assured that I can turn that sharing off in the future?
 
-OAuth2 is an industry-standard authorization framework designed to address these concerns. Specifically:
+[OAuth2](https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2) is an industry-standard authorization framework designed to address these concerns. Specifically:
 
 1. Your credentials are never shared with the app. Instead, Box gives the app a unique, time-limited token with which the app can make Box API calls on your behalf.
 2. The app developer must specify up front what permissions ("scopes") it needs on your files. Prior to authorizing access you can review and confirm the requested permissions. Box enforces those permissions at the API level.
 3. At any time, you can tell both the app and/or Box to stop sharing your data. Future API calls from the app will be rejected as unauthorized.
 
-## The Two Flavors of OAuth2
+## The Two Flavors of OAuth2 in Box
 
 *"3-legged" OAuth2* was designed for mobile/browser application development. It enables users to securely share their content (such as Box files) with a 3rd party application and revoke that permission at any time. For many years this was the only authentication method provided by Box.
 
@@ -96,12 +105,3 @@ The Service Account can be invited to a collaboration like any other Box user. S
 The collaboration will be automatically accepted and the Service Account will appear as an external collaborator. Your JWT app can now work with data in that collaboration folder.
 
 ![Collaboration2.png](img/Collaboration2.png)
-
-## JWT App Examples
-
-Browse the project below for code examples to discover the service account login and list out a box folder tree. In each of these examples you will need the JSON config file that was downloaded when configuring your JWT app above.
-
-* [.Net (C#)](examples/csharp-netcore)
-* [.Net (F#)](examples/fsharp-netcore)
-* [Python](examples/python)
-* [Node.js](examples/node)
