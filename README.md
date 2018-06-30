@@ -129,4 +129,4 @@ Let's work together to create one, or feel free to code one up yourself and we c
 
 **I have other questions that were missed here.**
 
-[Get in touch](mailto:jhoerr@gmail.com) and let's figure it out together!
+[Get in touch](mailto:jhoerr@gmail.com) or [open an issue](https://github.com/box-community/jwt-app-primer/issues) and let's figure it out together!
