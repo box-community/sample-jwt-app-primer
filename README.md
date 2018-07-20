@@ -69,7 +69,7 @@ Refer to the Box documentation on [Authentication with JWT](https://developer.bo
 5. On the _What would you like to name your app?_ page, select a meaningful name for your application. Note that this will be the name visible to users on any collaboration folders to which this app has access. Click **Create App**.
 6. Click **View Your App**
 
-7. Configure the applications permissions under _Application Scopes_, _Application Scopes_, and _Advanced Features_. The following diagram represents the most restrictive (safest) permission set. You can select elevated permissions to satisfy the requirements of your application.  
+7. Configure the applications permissions under _Application Access_, _Application Scopes_, and _Advanced Features_. The following diagram represents the most restrictive (safest) permission set. If your use case is limited to working with files or folders owned by you or a department, set the _Application Access_ to _Enterprise_, deselect all _Application Scope_, and disable all _Advanced Features_. 
 
 ![Configuration1.PNG](img/Configuration1.PNG)  
 
