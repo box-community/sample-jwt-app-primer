@@ -25,6 +25,6 @@ There are two configuration variables to set in `app.py`.
 After setting the above configuration variables execute the following in a terminal.
 
 ```
-pip install -r requirements.txt
-python app.py
+pip3 install -r requirements.txt
+python3 app.py
 ```
