@@ -2,7 +2,7 @@ var BoxSDK = require('box-node-sdk');
 
 /** Configuration **/
 
-var pathToConfigJson = "/Users/jhoerr/Downloads/62618999_02mlnyl7_config.json";
+var pathToConfigJson = "PATH TO YOUR CONFIG FILE";
 
 var folderId = "0";
 

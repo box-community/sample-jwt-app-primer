@@ -6,7 +6,7 @@ import os.path
 ## Configuration ##
 
 # Set the path to your JWT app config JSON file here!
-pathToConfigJson = ""
+pathToConfigJson = "PATH TO YOUR CONFIG FILE"
 
 # Set the path to a folder you'd like to traverse here!
 folderId = "0"
