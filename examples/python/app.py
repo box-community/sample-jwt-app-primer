@@ -54,15 +54,9 @@ def get_subitems(client, folder, fields = ["id","name","path_collection","size"]
         list -- A collection of Box files and folders.
     """
     items = []
-    offset = 0
-    lastFetchedCount = -1
-    while (lastFetchedCount != 0):
-        # fetch folder items and add subfolders to list
-        fetched = client.folder(folder_id=folder['id']).get_items(limit=1000, offset=offset, fields=fields)
-        items.extend(fetched)
-        # update offset and counts for terminating conditions.
-        offset += len(fetched)
-        lastFetchedCount = len(fetched)
+    # fetch folder items and add subfolders to list
+    for item in client.folder(folder_id=folder['id']).get_items(fields=fields):
+        items.append(item)
     return items
 
 def print_user_info(client):
